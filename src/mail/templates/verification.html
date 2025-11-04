@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Verifica tu cuenta</title>
+  </head>
+  <body
+    style="
+      margin: 0;
+      padding: 0;
+      background-color: #f7f8fa;
+    "
+  >
+    <!-- Contenedor Principal (Cuerpo del Email) -->
+    <table
+      border="0"
+      cellpadding="0"
+      cellspacing="0"
+      width="100%"
+      role="presentation"
+      style="background-color: #f7f8fa"
+    >
+      <tr>
+        <td align="center" style="padding: 40px 20px">
+          <!-- Contenedor de la Tarjeta (El div.container original) -->
+          <table
+            align="center"
+            border="0"
+            cellpadding="0"
+            cellspacing="0"
+            width="100%"
+            style="
+              max-width: 500px;
+              background-color: #ffffff;
+              border-radius: 12px;
+              box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            "
+          >
+            <!-- Relleno/Padding de la Tarjeta -->
+            <tr>
+              <td
+                style="
+                  padding: 30px;
+                  font-family: Arial, sans-serif;
+                  font-size: 16px;
+                  line-height: 150%;
+                  color: #555555;
+                "
+              >
+                <!-- Título (H1) -->
+                <h1
+                  style="
+                    margin: 0 0 20px 0;
+                    font-family: Arial, sans-serif;
+                    font-size: 24px;
+                    line-height: 120%;
+                    color: #2b2d42;
+                    font-weight: bold;
+                  "
+                >
+                  ¡Hola, {{name}}!
+                </h1>
+
+                <!-- Párrafo 1 -->
+                <p style="margin: 0 0 20px 0">
+                  Gracias por registrarte en <b>Keleo App</b>. Para activar tu
+                  cuenta, haz clic en el siguiente enlace:
+                </p>
+
+                <!-- Sección del Botón -->
+                <table
+                  border="0"
+                  cellpadding="0"
+                  cellspacing="0"
+                  role="presentation"
+                  width="100%"
+                  style="margin: 0 auto 20px auto"
+                >
+                  <tr>
+                    <td align="center" style="padding: 0">
+                      <!-- Estructura del Botón -->
+                      <table
+                        border="0"
+                        cellpadding="0"
+                        cellspacing="0"
+                        role="presentation"
+                        style="border-collapse: separate"
+                      >
+                        <tr>
+                          <td
+                            class="button-td"
+                            align="center"
+                            bgcolor="#2563eb"
+                            style="
+                              border-radius: 50px;
+                              background-color: #2563eb;
+                            "
+                          >
+                            <a
+                              href="{{verifyLink}}"
+                              target="_blank"
+                              class="button-a"
+                              style="
+                                display: inline-block;
+                                padding: 12px 20px;
+                                font-family: Arial, sans-serif;
+                                font-size: 16px;
+                                font-weight: bold;
+                                line-height: 100%;
+                                color: #ffffff;
+                                text-decoration: none;
+                                border-radius: 8px;
+                              "
+                            >
+                              Verificar cuenta
+                            </a>
+                          </td>
+                        </tr>
+                      </table>
+                      <!-- Fin Estructura del Botón -->
+                    </td>
+                  </tr>
+                </table>
+
+                <!-- Párrafo de Ignorar -->
+                <p style="margin: 0">
+                  Si tú no creaste esta cuenta, puedes ignorar este correo.
+                </p>
+              </td>
+            </tr>
+          </table>
+          <!-- Fin Contenedor de la Tarjeta -->
+        </td>
+      </tr>
+    </table>
+    <!-- Fin Contenedor Principal -->
+  </body>
+</html>

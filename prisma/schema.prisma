@@ -1,0 +1,143 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model menu_categories {
+  id            String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  restaurant_id String       @db.Uuid
+  name          String       @db.VarChar(50)
+  created_at    DateTime?    @default(now()) @db.Timestamp(6)
+  updated_at    DateTime?    @default(now()) @db.Timestamp(6)
+  restaurants   restaurants  @relation(fields: [restaurant_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  menu_items    menu_items[]
+}
+
+model menu_items {
+  id              String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  restaurant_id   String           @db.Uuid
+  category_id     String?          @db.Uuid
+  name            String           @db.VarChar(100)
+  description     String?
+  price           Decimal          @db.Decimal(10, 2)
+  available       Boolean?         @default(true)
+  created_at      DateTime?        @default(now()) @db.Timestamp(6)
+  updated_at      DateTime?        @default(now()) @db.Timestamp(6)
+  menu_categories menu_categories? @relation(fields: [category_id], references: [id], onUpdate: NoAction)
+  restaurants     restaurants      @relation(fields: [restaurant_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  order_items     order_items[]
+}
+
+model order_items {
+  id           String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  order_id     String     @db.Uuid
+  menu_item_id String     @db.Uuid
+  quantity     Int?       @default(1)
+  price        Decimal    @db.Decimal(10, 2)
+  status       String?    @db.VarChar(20)
+  created_at   DateTime?  @default(now()) @db.Timestamp(6)
+  updated_at   DateTime?  @default(now()) @db.Timestamp(6)
+  menu_items   menu_items @relation(fields: [menu_item_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  orders       orders     @relation(fields: [order_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model orders {
+  id          String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  table_id    String        @db.Uuid
+  user_id     String?       @db.Uuid
+  status      String?       @db.VarChar(20)
+  total       Decimal?      @default(0) @db.Decimal(10, 2)
+  created_at  DateTime?     @default(now()) @db.Timestamp(6)
+  updated_at  DateTime?     @default(now()) @db.Timestamp(6)
+  order_items order_items[]
+  tables      tables        @relation(fields: [table_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users       users?        @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  payments    payments[]
+  tickets     tickets[]
+}
+
+model payments {
+  id       String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  order_id String    @db.Uuid
+  amount   Decimal   @db.Decimal(10, 2)
+  method   String?   @db.VarChar(20)
+  paid_at  DateTime? @default(now()) @db.Timestamp(6)
+  orders   orders    @relation(fields: [order_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model restaurant_settings {
+  id            String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  restaurant_id String      @db.Uuid
+  key_name      String?     @db.VarChar(50)
+  value_text    String?
+  created_at    DateTime?   @default(now()) @db.Timestamp(6)
+  updated_at    DateTime?   @default(now()) @db.Timestamp(6)
+  restaurants   restaurants @relation(fields: [restaurant_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model restaurants {
+  id                  String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  owner_id            String                @db.Uuid
+  name                String                @db.VarChar(100)
+  address             String?               @db.VarChar(255)
+  phone               String?               @db.VarChar(20)
+  created_at          DateTime?             @default(now()) @db.Timestamp(6)
+  updated_at          DateTime?             @default(now()) @db.Timestamp(6)
+  logo_url            String?               @db.VarChar(255)
+  menu_categories     menu_categories[]
+  menu_items          menu_items[]
+  restaurant_settings restaurant_settings[]
+  users               users                 @relation(fields: [owner_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  tables              tables[]
+  user_restaurants    user_restaurants[]
+}
+
+model tables {
+  id            String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  restaurant_id String      @db.Uuid
+  name          String?     @db.VarChar(50)
+  capacity      Int?        @default(4)
+  status        String?     @db.VarChar(20)
+  created_at    DateTime?   @default(now()) @db.Timestamp(6)
+  updated_at    DateTime?   @default(now()) @db.Timestamp(6)
+  orders        orders[]
+  restaurants   restaurants @relation(fields: [restaurant_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model tickets {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  order_id   String    @db.Uuid
+  file_path  String    @db.VarChar(255)
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+  orders     orders    @relation(fields: [order_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model users {
+  id                String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name              String             @db.VarChar(50)
+  lastname          String?            @db.VarChar(50)
+  email             String             @unique @db.VarChar(150)
+  password_hash     String             @db.VarChar(255)
+  role              String             @db.VarChar(20)
+  created_at        DateTime           @default(now()) @db.Timestamp(6)
+  updated_at        DateTime           @default(now()) @db.Timestamp(6)
+  profile_image     String?            @db.VarChar(255)
+  verificationtoken String?            @db.VarChar
+  isverified        Boolean?
+  orders            orders[]
+  restaurants       restaurants[]
+  user_restaurants  user_restaurants[]
+}
+
+model user_restaurants {
+  user_id       String      @db.Uuid
+  restaurant_id String      @db.Uuid
+  restaurants   restaurants @relation(fields: [restaurant_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users         users       @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([user_id, restaurant_id])
+}
