@@ -29,7 +29,7 @@ export class AuthService {
 
     // Validamos si la cuenta esta verificada
     if (!user.isverified) {
-      throw new BadRequestException('Tienes que verificar tu cuenta para acceder');
+      throw new BadRequestException('La cuenta de correo no está registrada');
     }
 
     // Validar contraseña
